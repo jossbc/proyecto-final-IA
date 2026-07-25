@@ -1,13 +1,23 @@
+import logging
+
 from fastapi import FastAPI
 
-app = FastAPI()
+from routes.prediction_routes import router as prediction_router
+
+
+logging.basicConfig(level=logging.INFO)
+
+app = FastAPI(
+    title="Sistema de Riesgo Crediticio",
+    description="API para evaluar solicitudes de cerdito",
+    version="1.0.0"
+)
+
+app.include_router(prediction_router)
 
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str | None = None):
-    return {"item_id": item_id, "q": q}
+    return {
+        "message": "API de riesgo crediticio activa"
+    }
