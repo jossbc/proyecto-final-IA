@@ -1,11 +1,9 @@
 from services.api_client import (
     PredictionApiError,
-    request_prediction,
-    request_top_features
+    request_prediction
 )
 from services.ollama_service import (
     OllamaServiceError,
-    explain_prediction,
     extract_applicant_data
 )
 
@@ -42,9 +40,15 @@ LOAN_INTENT_MAPPING = {
     "Medical": 5
 }
 
+RISK_LABELS = {
+    0: "Bajo",
+    1: "Medio",
+    2: "Alto"
+}
+
 FIELD_QUESTIONS = {
-    "user_id": "¿Cómo te llamas o qué identificador deseas usar?",
-    "age": "¿Cuál es tu edad?",
+    "user_id": "¿Cómo te llamas o que identificador deseas usar?",
+    "age": "¿Cual es tu edad?",
     "occupation_status": (
         "¿Actualmente eres empleado, estudiante o trabajador independiente?"
     ),
@@ -161,20 +165,17 @@ def process_message(
 
         payload = _prediction_payload(current_state["data"])
         prediction = request_prediction(payload)
-        top_features = request_top_features()
-        important_values = {
-            feature: payload[feature]
-            for feature in top_features
-        }
-        explanation = explain_prediction(
-            prediction,
-            important_values
-        )
 
         current_state["completed"] = True
         current_state["prediction"] = prediction
 
-        return explanation, current_state
+        result = (
+            "## Resultado de la evaluación crediticia\n\n"
+            f"**Categoría:** Riesgo {RISK_LABELS[prediction]} "
+            f"({prediction})\n\n"
+        )
+
+        return result, current_state
 
     except (OllamaServiceError, PredictionApiError) as error:
         return str(error), current_state

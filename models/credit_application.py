@@ -35,10 +35,6 @@ class PredictionResponse(BaseModel):
     )
 
 
-class ModelMetadataResponse(BaseModel):
-    top_5_features: list[str]
-
-
 class ExtractedApplicantData(BaseModel):
     """Datos que el LLM puede extraer de una conversación."""
 

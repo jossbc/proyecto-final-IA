@@ -33,19 +33,3 @@ def request_prediction(payload: dict) -> int:
         )
 
     return prediction
-
-
-def request_top_features() -> list[str]:
-    try:
-        response = httpx.get(
-            f"{FASTAPI_URL}/predict/metadata",
-            timeout=10
-        )
-        response.raise_for_status()
-        features = response.json()["top_5_features"]
-    except (httpx.HTTPError, KeyError, TypeError) as error:
-        raise PredictionApiError(
-            "No fue posible obtener las características principales."
-        ) from error
-
-    return [str(feature) for feature in features]

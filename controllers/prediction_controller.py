@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime, timezone
 
 import pandas as pd
 from fastapi import HTTPException
@@ -7,7 +6,6 @@ from pymongo.errors import PyMongoError
 
 from models.credit_application import (
     CreditApplication,
-    ModelMetadataResponse,
     PredictionResponse
 )
 from utils.mongo import get_collection
@@ -23,17 +21,6 @@ model_bundle = pd.read_pickle(
 model = model_bundle['model']
 feature_names = model_bundle['feature_names']
 top_5_features = model_bundle['top_5_features']
-
-
-def get_model_metadata() -> ModelMetadataResponse:
-    if hasattr(top_5_features, "index"):
-        feature_list = top_5_features.index.tolist()
-    else:
-        feature_list = list(top_5_features)
-
-    return ModelMetadataResponse(
-        top_5_features=feature_list
-    )
 
 
 def predict_credit_risk(
@@ -62,11 +49,20 @@ def predict_credit_risk(
                 'El modelo produjo una categoría inválida.'
             )
 
+        if hasattr(top_5_features, "index"):
+            relevant_feature_names = top_5_features.index.tolist()
+        else:
+            relevant_feature_names = list(top_5_features)
+
+        relevant_features = {
+            feature: client_features[feature]
+            for feature in relevant_feature_names
+        }
+
         prediction_record = {
             'user_id': application.user_id,
-            'features': client_features,
+            'features': relevant_features,
             'prediction': prediction,
-            'created_at': datetime.now(timezone.utc)
         }
 
         get_collection().insert_one(prediction_record)
