@@ -9,8 +9,8 @@ logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(
     title="Sistema de Riesgo Crediticio",
-    description="API para evaluar solicitudes de cerdito",
-    version="1.0.0"
+    description="API para evaluar solicitudes de crédito",
+    version="3.2"
 )
 
 app.include_router(prediction_router)

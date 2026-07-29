@@ -7,9 +7,10 @@ from pymongo.errors import PyMongoError
 
 from models.credit_application import (
     CreditApplication,
+    ModelMetadataResponse,
     PredictionResponse
 )
-from utils.mongo import collection
+from utils.mongo import get_collection
 
 
 logger = logging.getLogger(__name__)
@@ -22,6 +23,17 @@ model_bundle = pd.read_pickle(
 model = model_bundle['model']
 feature_names = model_bundle['feature_names']
 top_5_features = model_bundle['top_5_features']
+
+
+def get_model_metadata() -> ModelMetadataResponse:
+    if hasattr(top_5_features, "index"):
+        feature_list = top_5_features.index.tolist()
+    else:
+        feature_list = list(top_5_features)
+
+    return ModelMetadataResponse(
+        top_5_features=feature_list
+    )
 
 
 def predict_credit_risk(
@@ -57,7 +69,7 @@ def predict_credit_risk(
             'created_at': datetime.now(timezone.utc)
         }
 
-        collection.insert_one(prediction_record)
+        get_collection().insert_one(prediction_record)
 
         logger.info(
             'Predicción registrada para el usuario %s',
