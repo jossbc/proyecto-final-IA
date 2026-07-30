@@ -22,6 +22,11 @@ model = model_bundle['model']
 feature_names = model_bundle['feature_names']
 top_5_features = model_bundle['top_5_features']
 
+if isinstance(top_5_features, pd.Series):
+    relevant_feature_names = top_5_features.index.tolist()
+else:
+    relevant_feature_names = list(top_5_features)
+
 
 def predict_credit_risk(
     application: CreditApplication
@@ -48,11 +53,6 @@ def predict_credit_risk(
             raise ValueError(
                 'El modelo produjo una categoría inválida.'
             )
-
-        if hasattr(top_5_features, "index"):
-            relevant_feature_names = top_5_features.index.tolist()
-        else:
-            relevant_feature_names = list(top_5_features)
 
         relevant_features = {
             feature: client_features[feature]

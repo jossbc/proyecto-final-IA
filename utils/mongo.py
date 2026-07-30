@@ -9,10 +9,10 @@ load_dotenv()
 
 @lru_cache(maxsize=1)
 def get_client() -> MongoClient:
-    uri = os.getenv("MONGODB_URI")
+    uri = os.getenv('MONGODB_URI')
     if not uri:
         raise RuntimeError(
-            "No se encontró la variable MONGODB_URI."
+            'No se encontró la variable MONGODB_URI.'
         )
 
     return MongoClient(
@@ -21,21 +21,18 @@ def get_client() -> MongoClient:
     )
 
 
-def get_collection(collection_name: str | None = None):
-    database_name = os.getenv("DATABASE_NAME")
-    selected_collection = (
-        collection_name
-        or os.getenv("COLLECTION_NAME")
-    )
-
+def get_collection():
+    database_name = os.getenv('DATABASE_NAME')
+    collection_name = os.getenv("COLLECTION_NAME")
+    
     if not database_name:
         raise RuntimeError(
-            "No se encontró la variable DATABASE_NAME."
+            'No se encontró la variable DATABASE_NAME.'
         )
 
-    if not selected_collection:
+    if not collection_name:
         raise RuntimeError(
-            "No se encontró la variable COLLECTION_NAME."
+            'No se encontró la variable COLLECTION_NAME.'
         )
 
-    return get_client()[database_name][selected_collection]
+    return get_client()[database_name][collection_name]

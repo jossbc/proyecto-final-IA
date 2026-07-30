@@ -36,19 +36,19 @@ class PredictionResponse(BaseModel):
 
 
 class ExtractedApplicantData(BaseModel):
-    """Datos que el LLM puede extraer de una conversación."""
+    '''Datos que el LLM puede extraer de una conversación.'''
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra='forbid')
 
     user_id: str | None = Field(
         default=None,
-        description="Nombre o identificador que el usuario indicó explícitamente."
+        description='Nombre o identificador que el usuario indicó explícitamente.'
     )
     age: int | None = Field(default=None, gt=0, le=120)
     occupation_status: Literal[
-        "Employed",
-        "Student",
-        "Self-Employed"
+        'Employed',
+        'Student',
+        'Self-Employed'
     ] | None = None
     years_employed: float | None = Field(default=None, ge=0)
     annual_income: float | None = Field(default=None, gt=0)
@@ -60,11 +60,11 @@ class ExtractedApplicantData(BaseModel):
     delinquencies_last_2yrs: int | None = Field(default=None, ge=0)
     derogatory_marks: int | None = Field(default=None, ge=0)
     loan_intent: Literal[
-        "Business",
-        "Home Improvement",
-        "Debt Consolidation",
-        "Education",
-        "Personal",
-        "Medical"
+        'Business',
+        'Home Improvement',
+        'Debt Consolidation',
+        'Education',
+        'Personal',
+        'Medical'
     ] | None = None
     loan_amount: float | None = Field(default=None, gt=0)
