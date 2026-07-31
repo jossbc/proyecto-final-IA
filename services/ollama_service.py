@@ -26,6 +26,17 @@ def extract_pending_value(
 
     text = message.strip().lower()
 
+    zero_count_fields = {
+        'delinquencies_last_2yrs',
+        'derogatory_marks'
+    }
+
+    if (
+        pending_field in zero_count_fields
+        and text in {'no', 'ninguno', 'ninguna', 'cero', '0'}
+    ):
+        return {pending_field: 0}
+
     numeric_fields = {
         'age': int,
         'years_employed': float,
