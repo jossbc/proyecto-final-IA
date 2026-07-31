@@ -173,7 +173,6 @@ def process_message(
         prediction = request_prediction(payload)
 
         current_state['completed'] = True
-        current_state['prediction'] = prediction
 
         result = (
             '## Resultado de la evaluación\n\n'
