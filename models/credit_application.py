@@ -1,5 +1,3 @@
-from typing import Literal
-
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -45,11 +43,10 @@ class ExtractedApplicantData(BaseModel):
         description='Nombre o identificador que el usuario indicó explícitamente.'
     )
     age: int | None = Field(default=None, gt=0, le=120)
-    occupation_status: Literal[
-        'Employed',
-        'Student',
-        'Self-Employed'
-    ] | None = None
+    occupation_status: str | None = Field(
+        default=None,
+        pattern=r'^(Employed|Student|Self-Employed)$'
+    )
     years_employed: float | None = Field(default=None, ge=0)
     annual_income: float | None = Field(default=None, gt=0)
     credit_score: int | None = Field(default=None, ge=300, le=850)
@@ -59,12 +56,11 @@ class ExtractedApplicantData(BaseModel):
     defaults_on_file: int | None = Field(default=None, ge=0, le=1)
     delinquencies_last_2yrs: int | None = Field(default=None, ge=0)
     derogatory_marks: int | None = Field(default=None, ge=0)
-    loan_intent: Literal[
-        'Business',
-        'Home Improvement',
-        'Debt Consolidation',
-        'Education',
-        'Personal',
-        'Medical'
-    ] | None = None
+    loan_intent: str | None = Field(
+        default=None,
+        pattern=(
+            r'^(Business|Home Improvement|Debt Consolidation|'
+            r'Education|Personal|Medical)$'
+        )
+    )
     loan_amount: float | None = Field(default=None, gt=0)
