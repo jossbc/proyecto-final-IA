@@ -1,13 +1,13 @@
 # Documentación técnica
 
-## 1. Descripción
+## Descripción
 
 Sistema local de evaluación de riesgo crediticio compuesto por:
 
 - Un modelo `DecisionTreeClassifier`.
 - Una API REST desarrollada con FastAPI.
 - Un agente conversacional con Gradio y Ollama.
-- MongoDB para persistir el historial de predicciones.
+- MongoDB para registrar el historial de predicciones.
 
 La salida del modelo es una categoría:
 
@@ -17,9 +17,8 @@ La salida del modelo es una categoría:
 | 1 | Riesgo medio |
 | 2 | Riesgo alto |
 
-## 2. Arquitectura
+## Arquitectura
 
-```text
 Usuario
   → Gradio
   → Servicio de conversación
@@ -28,12 +27,11 @@ Usuario
   → Árbol de decisión
   → MongoDB
   → Resultado en Gradio
-```
 
 Ollama se utiliza únicamente para extraer datos del lenguaje natural. La
 clasificación de riesgo siempre es realizada por el árbol de decisión.
 
-## 3. Estructura del proyecto
+## Estructura del proyecto
 
 ```text
 artifacts/       Modelo entrenado y metadatos
@@ -66,18 +64,9 @@ main.py          Punto de entrada de FastAPI
 - `interfaces/chat_interface.py`: construye la interfaz de Gradio.
 - `utils/mongo.py`: administra la conexión con MongoDB.
 
-## 4. Modelo predictivo
+## Modelo predictivo
 
-Se utilizó un árbol de decisión con la siguiente configuración:
-
-```python
-DecisionTreeClassifier(
-    criterion='gini',
-    max_depth=7,
-    random_state=42
-)
-```
-
+Se utilizó un árbol de decisión.
 El dataset se dividió en 80 % para entrenamiento y 20 % para prueba, utilizando
 estratificación. El modelo se evaluó mediante accuracy, precision, recall,
 F1-score y matriz de confusión.
@@ -125,7 +114,7 @@ delinquencies_last_2yrs
 derogatory_marks
 ```
 
-## 5. API
+## API
 
 ### `POST /predict`
 
@@ -152,7 +141,7 @@ validaciones principales se encuentran:
 - Ingresos y préstamo: mayores que cero.
 - Deudas, ahorros, ratios y años: valores no negativos.
 
-## 6. Agente conversacional
+## Agente conversacional
 
 El agente mantiene un estado con:
 
@@ -177,7 +166,7 @@ estas reglas:
 | 1 | Solicitar documentación adicional |
 | 2 | Rechazar y recomendar educación financiera |
 
-## 7. Persistencia
+## Persistencia
 
 Cada evaluación se guarda en MongoDB con la siguiente estructura:
 
@@ -198,7 +187,7 @@ Cada evaluación se guarda en MongoDB con la siguiente estructura:
 El modelo recibe las 15 características, pero el registro conserva únicamente
 las cinco más importantes.
 
-## 8. Variables de entorno
+## Variables de entorno
 
 ```env
 MONGODB_URI=mongodb://...
@@ -211,7 +200,7 @@ OLLAMA_URL=http://127.0.0.1:11434
 OLLAMA_MODEL=llama3.2
 ```
 
-## 9. Ejecución
+## Ejecución
 
 API:
 
@@ -234,10 +223,11 @@ Gradio:  http://127.0.0.1:7860
 Ollama:  http://127.0.0.1:11434
 ```
 
-## 10. Manejo de errores
+## Manejo de errores
 
 - FastAPI devuelve errores de validación cuando el payload es inválido.
 - El agente controla fallos de conexión con FastAPI y Ollama.
 - El controlador devuelve `503` cuando no puede registrar la evaluación.
 - La categoría se valida en la API y en el cliente; solo se aceptan 0, 1 y 2.
 
+ 
