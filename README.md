@@ -9,7 +9,7 @@ También utiliza:
 - Ollama para entender los datos escritos por el usuario.
 - MongoDB para guardar el historial de las evaluaciones.
 
-## ¿Cómo funciona?
+## ¿Como funciona?
 
 1. El usuario escribe sus datos en el chat.
 2. Ollama identifica los datos proporcionados.
@@ -24,7 +24,7 @@ También utiliza:
 
 7. En MongoDB se guarda el usuario, la predicción y las cinco características más importantes.
 
-## Instalación
+## Instalacion
 
 Primero hay que crear y activar el entorno virtual:
 
@@ -46,7 +46,7 @@ También se necesita un archivo `.env` con la configuración:
    OLLAMA_URL=http://127.0.0.1:11434
    OLLAMA_MODEL=llama3.2
 
-## Configuración de Ollama
+## Configuracion de Ollama
 
 Ollama debe estar instalado y ejecutándose en la computadora.
 
@@ -83,3 +83,9 @@ La interfaz estará disponible en:
    http://127.0.0.1:7860
 
 Desde ahí se puede comenzar a conversar con el asistente y realizar una evaluación crediticia.
+
+## Manual de usuario
+
+El manual de uso completo se encuentra en:
+
+`documentation/Manual de usuario.pdf`
