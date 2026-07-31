@@ -17,6 +17,38 @@ class OllamaServiceError(RuntimeError):
     pass
 
 
+ZERO_PHRASES = {
+    'defaults_on_file': (
+        'nunca he incumplido',
+        'no he incumplido',
+        'sin incumplimientos'
+    ),
+    'delinquencies_last_2yrs': (
+        'no he tenido atrasos',
+        'no tengo atrasos',
+        'sin atrasos',
+        'ningún atraso',
+        'ningun atraso'
+    ),
+    'derogatory_marks': (
+        'no tengo marcas negativas',
+        'sin marcas negativas',
+        'ninguna marca negativa',
+        'no tengo marcas derogatorias'
+    )
+}
+
+
+def extract_explicit_zeros(message: str) -> dict:
+    text = message.lower()
+
+    return {
+        field: 0
+        for field, phrases in ZERO_PHRASES.items()
+        if any(phrase in text for phrase in phrases)
+    }
+
+
 def extract_pending_value(
     message: str,
     pending_field: str | None
@@ -156,6 +188,10 @@ Mensaje:
         validated = ExtractedApplicantData(**extracted_json)
 
         extracted_data = validated.model_dump(exclude_none=True)
+
+        explicit_zeros = extract_explicit_zeros(user_message)
+        for field, value in explicit_zeros.items():
+            extracted_data.setdefault(field, value)
 
         if pending_field not in extracted_data:
             extracted_data.update(
