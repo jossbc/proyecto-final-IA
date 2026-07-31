@@ -84,8 +84,8 @@ La interfaz estará disponible en:
 
 Desde ahí se puede comenzar a conversar con el asistente y realizar una evaluación crediticia.
 
-## Manual de usuario
 
-El manual de uso completo se encuentra en:
+## Documentación
 
-`documentation/Manual de usuario.pdf`
+- **[Manual de usuario](documentation/Manual_de_usuario.pdf)**
+- **[Documentación técnica](documentation/Documentacion_tecnica.md)**
